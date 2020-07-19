@@ -5,7 +5,7 @@ import reply
 import requests
 import configparser
 import datetime
-from wxapi import Weixin
+from vxapi import Weixin
 
 # 初始化配置信息
 config = configparser.ConfigParser()
@@ -28,6 +28,8 @@ db = web.database(
 vx = Weixin(appid,appsecret)
 access_token = vx.getAccessToken()
 
+
+# 判断用户是否是VIP用户（星标用户: id = 2）
 def isVip(openid):
     global access_token
     url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token={access_token}&openid={openid}&lang=zh_CN".format(access_token=access_token,openid=openid)
@@ -36,7 +38,8 @@ def isVip(openid):
     if 2 in responsedata['tagid_list']:
         return True 
     return False
-        
+
+
 class Handle(object):
     # 验证开发者服务器
     def GET(self):
@@ -137,14 +140,14 @@ class Info(object):
             
             # 4. 判断用户是否是会员（星标用户）
             openid = responsedata['openid']
-            # access_token = '35_j5Nvbr8cP3lzl6RFSf1_jnGEzhwoLwu9WLUx6IAHQLEDOw270uPdzEt9xLyvNzwOYFeduyII57ZveQp6yb8SD_W0uXqgW_1kbbnYq8rgbmmz7gQ95HVcK2CsGikyP-eph50RpY4llqOC_S2fVCUhACACJB'
             res = isVip(openid)
             if res: 
-                infos = db.query('select * from info2 order by time desc')
-                return render.info(infos)
+                records = db.query('select info,createtime from infos order by createtime desc')
+                return render.info(records)
             return render.index()
         except Exception as e:
             return render.index()
+
 
 # 信息发布菜单功能
 class Pinfo(object):
@@ -194,13 +197,11 @@ class Pushinfo(object):
     '''
     def POST(self):
         data = web.input()
-        infos = data.info
+        name = data.name
+        iphone = data.iphone
+        address = data.address
+        info = data.info
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        db.insert('info2', info = infos, time = dt)
-        users = db.query('select * from info2 order by time desc')
-        return render.info(users)
-
-# if __name__ == "__main__":
-#     access_token = '35_j5Nvbr8cP3lzl6RFSf1_jnGEzhwoLwu9WLUx6IAHQLEDOw270uPdzEt9xLyvNzwOYFeduyII57ZveQp6yb8SD_W0uXqgW_1kbbnYq8rgbmmz7gQ95HVcK2CsGikyP-eph50RpY4llqOC_S2fVCUhACACJB'
-#     openid = 'oEnPt5uxeExaaeDYfFAi_rP8H53s'
-#     isVip(openid,access_token)
+        db.insert('infos', name = name, iphone = iphone, address = address, info = info, createtime = dt)
+        records = db.query('select info,createtime from infos order by createtime desc')
+        return render.info(records)

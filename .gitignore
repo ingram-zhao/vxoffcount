@@ -1,7 +1,6 @@
 logs/
 __pycache__
-envtest
+testenv
 MP_verify_aCCh0nG79zVP0KPc.txt
 token
-testapi.py
 config.ini

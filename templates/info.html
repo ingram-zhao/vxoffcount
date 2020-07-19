@@ -1,5 +1,4 @@
-$def with (infos)
-
+$def with (records)
 <html>
 <head> <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0"> </head>
 <body>
@@ -7,8 +6,8 @@ $def with (infos)
 <h1>苗木信息如下：</h1>
 
 <ul>
-$for test in infos:
-    <div> $test.time $test.info </div>
+$for record in records:
+    <div> $record.createtime $record.info </div>
 </ul>
 
 <script type="text/javascript">

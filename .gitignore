@@ -1,5 +1,4 @@
-*.log
-*.out
+logs/
 __pycache__
 testenv
 MP_verify_aCCh0nG79zVP0KPc.txt

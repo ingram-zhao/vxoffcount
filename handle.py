@@ -98,9 +98,8 @@ class Handle(object):
             content = '请联系管理员：15295733404 Ingramzhao' 
             replyMsg = reply.TextMsg(toUser, fromUser, content)
             return replyMsg.send()
-        
+            
         else:
-            print("暂且不处理")
             return "success"
 
 
@@ -141,7 +140,7 @@ class Info(object):
             # 4. 判断用户是否是会员（星标用户）
             openid = responsedata['openid']
             res = isVip(openid)
-            if res: 
+            if res:
                 records = db.query('select info,createtime from infos order by createtime desc')
                 return render.info(records)
             return render.index()

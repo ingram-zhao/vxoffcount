@@ -24,14 +24,12 @@ db = web.database(
         db =  config.get('db','dbname'),
     )
 
-# 获取access_token
+# 实例化->获取access_token
 vx = Weixin(appid,appsecret)
-access_token = vx.getAccessToken()
-
 
 # 判断用户是否是VIP用户（星标用户: id = 2）
 def isVip(openid):
-    global access_token
+    access_token = vx.getAccessToken()
     url = "https://api.weixin.qq.com/cgi-bin/user/info?access_token={access_token}&openid={openid}&lang=zh_CN".format(access_token=access_token,openid=openid)
     response = requests.get(url)
     responsedata = response.json()
@@ -98,7 +96,7 @@ class Handle(object):
             content = '请联系管理员：15295733404 Ingramzhao' 
             replyMsg = reply.TextMsg(toUser, fromUser, content)
             return replyMsg.send()
-            
+
         else:
             return "success"
 

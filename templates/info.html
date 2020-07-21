@@ -11,7 +11,11 @@ $def with (records)
         <br></br>
         $for record in records:
             <div>
-                $record.createtime $record.info 
+                <p>时间：$record.createtime</p>
+                <p>货主：$record.name</p>
+                <p>联系方式：$record.iphone</p>
+                <p>联系地址：$record.address</p>
+                <p>需求信息：$record.info</p>
             </div>
             <hr>
     <script type="text/javascript">

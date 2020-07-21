@@ -139,7 +139,7 @@ class Info(object):
             openid = responsedata['openid']
             res = isVip(openid)
             if res:
-                records = db.query('select info,createtime from infos order by createtime desc')
+                records = db.query('select * from infos order by createtime desc')
                 return render.info(records)
             return render.index()
         except Exception as e:

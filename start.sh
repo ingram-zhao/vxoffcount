@@ -11,5 +11,3 @@ python3 vxapi.py > /dev/null
 
 # 4.启动服务：main.py 80
 nohup python3 -u main.py 80 > ./logs/start.out 2>&1 &
-
-

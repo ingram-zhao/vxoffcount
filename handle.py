@@ -200,5 +200,5 @@ class Pushinfo(object):
         info = data.info
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         db.insert('infos', name = name, iphone = iphone, address = address, info = info, createtime = dt)
-        records = db.query('select info,createtime from infos order by createtime desc')
+        records = db.query('select * from infos order by createtime desc')
         return render.info(records)

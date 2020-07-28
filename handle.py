@@ -79,7 +79,7 @@ class Handle(object):
         if isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'text':
             toUser = recMsg.FromUserName
             fromUser = recMsg.ToUserName
-            content = '自动回复消息' 
+            content = '您好！我是平台管理员，有任何问题或建议都联系我15305170962(微信同号)'
             replyMsg = reply.TextMsg(toUser, fromUser, content)
             return replyMsg.send()
 
@@ -93,7 +93,7 @@ class Handle(object):
         elif isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'event' and recMsg.Event == 'CLICK' and recMsg.EventKey == 'SendInfo':
             toUser = recMsg.FromUserName
             fromUser = recMsg.ToUserName
-            content = '请联系管理员：15295733404 Ingramzhao' 
+            content = '您好！我是平台管理员，有任何问题或建议都联系我15305170962(微信同号)' 
             replyMsg = reply.TextMsg(toUser, fromUser, content)
             return replyMsg.send()
 

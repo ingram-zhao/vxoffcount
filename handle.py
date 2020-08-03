@@ -76,14 +76,15 @@ class Handle(object):
     def POST(self):
         webData = web.data()
         recMsg = receive.parse_xml(webData)
-        if isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'text':
-            toUser = recMsg.FromUserName
-            fromUser = recMsg.ToUserName
-            content = '您好！我是平台管理员，有任何问题或建议都联系我15305170962(微信同号)'
-            replyMsg = reply.TextMsg(toUser, fromUser, content)
-            return replyMsg.send()
+        # 自动回复功能：
+        # if isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'text':
+        #     toUser = recMsg.FromUserName
+        #     fromUser = recMsg.ToUserName
+        #     content = '您好！我是平台管理员，有任何问题或建议都联系我15305170962(微信同号)'
+        #     replyMsg = reply.TextMsg(toUser, fromUser, content)
+        #     return replyMsg.send()
 
-        elif isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'image':
+        if isinstance(recMsg, receive.Msg) and recMsg.MsgType == 'image':
             toUser = recMsg.FromUserName
             fromUser = recMsg.ToUserName
             mediaID = recMsg.MediaId

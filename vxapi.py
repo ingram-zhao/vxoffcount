@@ -87,6 +87,15 @@ class Weixin(object):
         responsedata = response.json()
         print(responsedata)
 
+    # 用户管理：获取用户列表（所有openid）
+    def get_all_openid(self):
+        access_token = self.getAccessToken()
+        url = "https://api.weixin.qq.com/cgi-bin/user/get?access_token={ACCESS_TOKEN}&next_openid={NEXT_OPENID}".format(ACCESS_TOKEN=access_token,NEXT_OPENID="")
+        response = requests.get(url)
+        responsedict = response.json()
+        openids = responsedict["data"]["openid"]
+        openidlist = list(openids)
+        return openidlist
 
 if __name__ == "__main__":
     # 读取配置文件： appid & appsecret
@@ -97,8 +106,11 @@ if __name__ == "__main__":
 
     vxapi1 = Weixin(appid,appsecret)
     # wxapi1.getAccessToken()
-    vxapi1.createMenus()
+    # vxapi1.createMenus()
     # wxapi1.createtag("VIP")
     # wxapi1.gettags()
     # wxapi1.get_user_tag(2)
     # wxapi1.getuserinfo('oEnPt5uxeExaaeDYfFAi_rP8H53s')
+    result = vxapi1.get_all_openid()
+    for openid in result:
+        print(openid)

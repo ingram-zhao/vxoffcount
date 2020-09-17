@@ -76,8 +76,9 @@ def getmsg():
     content = '货主：{0}\n联系方式：{1}\n联系地址：{2}\n需求信息：{3}\n'.format(result[1],result[2][:3]+'******'+result[2][8:],result[3],result[4]) + endcontent
     return content
 
+
+# 验证开发者服务器
 class Handle(object):
-    # 验证开发者服务器
     def GET(self):
         try:
             data = web.input()
@@ -140,8 +141,8 @@ class Handle(object):
             return "success"
 
 
+# 网页授权域名验证
 class Pageauth(object):
-    # 网页授权域名验证
      def GET(self):
         with open('MP_verify_aCCh0nG79zVP0KPc.txt','r+') as f:
             authcode = f.readline()
@@ -246,6 +247,7 @@ class Pushinfo(object):
         for openid in result:
             sendmsg(openid,content)
         return render.info(records)
+
 
 if __name__ == "__main__":
     # 测试推送消息

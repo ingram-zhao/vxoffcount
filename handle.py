@@ -5,6 +5,8 @@ import reply
 import requests
 import configparser
 import datetime
+import pymysql
+import json
 from vxapi import Weixin
 
 # 初始化配置信息
@@ -15,6 +17,7 @@ appid = config.get('auth','appid')
 appsecret = config.get('auth','appsecret')
 
 render = web.template.render(path)
+# 数据库连接配置1
 db = web.database(
         dbn = config.get('db','dbn'),
 		host =  config.get('db','host'),
@@ -22,6 +25,15 @@ db = web.database(
         port =  int(config.get('db','port')),
         pw =  config.get('db','password'),
         db =  config.get('db','dbname'),
+    )
+
+# 数据库连接配置2
+conn = pymysql.connect(
+		host =  config.get('db','host'),
+        user =  config.get('db','user'),
+        port =  int(config.get('db','port')),
+        password =  config.get('db','password'),
+        database =  config.get('db','dbname'),
     )
 
 # 实例化->获取access_token
@@ -37,6 +49,32 @@ def isVip(openid):
         return True 
     return False
 
+# 向所有用户发送消息
+def sendmsg(openid,content):
+    access_token = vx.getAccessToken()
+    url = 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token={ACCESS_TOKEN}'.format(ACCESS_TOKEN=access_token)
+    data = {
+        "touser": openid,
+        "msgtype":"text",
+        "text":
+            {
+                "content":content
+            }
+    }
+    data = json.dumps(data,ensure_ascii=False).encode('utf-8')
+    response = requests.post(url, data = data)
+
+# 从数据库中获取最新信息
+def getmsg():
+    cur = conn.cursor()
+    sql = "select * from infos order by createtime desc limit 1"
+    cur.execute(sql)
+    result = cur.fetchone()
+    cur.close()
+    conn.close()
+    endcontent = '【发自微信公众号"汤泉苗木信息网"请搜索关注】\n\n点击下面“信息查询”查看联系电话'
+    content = '货主：{0}\n联系方式：{1}\n联系地址：{2}\n需求信息：{3}\n'.format(result[1],result[2][:3]+'******'+result[2][8:],result[3],result[4]) + endcontent
+    return content
 
 class Handle(object):
     # 验证开发者服务器
@@ -202,4 +240,16 @@ class Pushinfo(object):
         dt = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         db.insert('infos', name = name, iphone = iphone, address = address, info = info, createtime = dt)
         records = db.query('select * from infos order by createtime desc')
+        # 推送消息
+        result = vx.get_all_openid()
+        content = getmsg()
+        for openid in result:
+            sendmsg(openid,content)
         return render.info(records)
+
+if __name__ == "__main__":
+    # 测试推送消息
+    result = vx.get_all_openid()
+    content = getmsg()
+    for openid in result:
+            sendmsg(openid,content)

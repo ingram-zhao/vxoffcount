@@ -68,6 +68,7 @@ def sendmsg(openid,content):
 def getmsg():
     cur = conn.cursor()
     sql = "select * from infos order by createtime desc limit 1"
+    conn.ping(reconnect=True)
     cur.execute(sql)
     result = cur.fetchone()
     cur.close()
@@ -191,6 +192,7 @@ class Pinfo(object):
     '''   
     判断用户是否是VIP用户：
         0： render.index()   --> /userinfo/index.html   --> 公告
+            global appsecret
         1:  render.pinfo()  --> /user/info/pinfo.html   --> 苗木信息发布平台
     '''
     def GET(self,name): 
@@ -200,7 +202,6 @@ class Pinfo(object):
             # 1.用户同意授权，获取code
             code=data.code
             global appid 
-            global appsecret
 
             # 2.通过code换取网页access_token
             url =  "https://api.weixin.qq.com/sns/oauth2/access_token?appid={appid}&secret={secret}&code={code}&grant_type=authorization_code".format(appid=appid,secret=appsecret,code=code)
@@ -209,12 +210,12 @@ class Pinfo(object):
             page_access_token = responsedict["access_token"]
             openid = responsedict["openid"]
 
-            # 3. 拉取用户信息(需scope为 snsapi_userinfo)
+            # 3.拉取用户信息(需scope为 snsapi_userinfo)
             url = "https://api.weixin.qq.com/sns/userinfo?access_token={page_access_token}&openid={openid}&lang=zh_CN".format(page_access_token=page_access_token,openid=openid)
             response = requests.get(url)
             responsedata = response.json()
             
-            # 4. 判断用户是否是会员（星标用户）
+            # 4.判断用户是否是会员（星标用户）
             openid = responsedata['openid']
             res = isVip(openid)
             if res: 

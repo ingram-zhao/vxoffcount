@@ -7,5 +7,5 @@ more-itertools==8.4.0
 PyMySQL==0.10.0
 requests==2.24.0
 six==1.15.0
-urllib3==1.25.9
+urllib3==1.26.5
 web.py==0.51
